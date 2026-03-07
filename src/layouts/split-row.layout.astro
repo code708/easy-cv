@@ -1,0 +1,16 @@
+---
+import '../styles/split-row.layout.css';
+const { center } = Astro.props;
+---
+
+<div class={'align-center flex' + (center == 'right' ? ' justify-center' : '')}>
+	<div class="split-left">
+		<slot name="left" />
+	</div>
+	<div
+		class={'flex basis-0 grow flex-col' +
+			(center == 'right' ? ' justify-center' : '')}
+	>
+		<slot name="right" />
+	</div>
+</div>

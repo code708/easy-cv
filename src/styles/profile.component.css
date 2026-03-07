@@ -1,0 +1,20 @@
+.profile-picture {
+	width: var(--sidebar-width);
+	margin-right: var(--a4-margin-8);
+	margin-bottom: calc(var(--a4-margin-8) / 3);
+}
+
+fullname {
+	display: block;
+	font-size: 41.7pt;
+	line-height: 1;
+	font-family: var(--font-google-serif);
+}
+
+header > role {
+	font-size: 21.5pt;
+	font-style: italic;
+	font-weight: 500;
+	line-height: 1.32;
+	text-transform: uppercase;
+}

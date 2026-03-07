@@ -1,0 +1,32 @@
+---
+import '../styles/cv.theme.css';
+import Profile from '../components/profile.component.astro';
+import SeparatorVertical from '../components/separator-vertical.component.astro';
+import ContinuousPages from '../layouts/continuous-page.layout.astro';
+import CoreCompetencies from '../components/core-competencies.component.astro';
+import PersonalDetails from '../components/personal-details.component.astro';
+import cvData from '../assets/cv.placeholder-data.json';
+
+interface CVData {
+	profile: Parameters<typeof Profile>[0];
+	qualifications: Parameters<typeof CoreCompetencies>[0];
+	personalDetails: Parameters<typeof PersonalDetails>[0];
+}
+
+let data: CVData = cvData;
+
+const { profile, qualifications, personalDetails } = data;
+
+const separatorProps = {
+	color: '--color-secondary',
+	thickness: 2,
+};
+---
+
+<ContinuousPages title="Curriculum Vitae">
+	<Profile {...profile} />
+	<SeparatorVertical {...separatorProps} />
+	<CoreCompetencies {...qualifications} />
+	<SeparatorVertical {...separatorProps} thickness={0} />
+	<PersonalDetails {...personalDetails} />
+</ContinuousPages>

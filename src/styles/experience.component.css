@@ -1,0 +1,7 @@
+work-experience > role {
+	display: block;
+	font-weight: 600;
+	font-family: var(--font-eb-serif);
+	text-transform: uppercase;
+	font-size: 13pt;
+}

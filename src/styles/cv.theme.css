@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Radley:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
+@import './global.css';
+
+@theme {
+	--a4-width: 210mm;
+	--a4-height: 297mm;
+	--a4-margin-8: 8mm;
+	--sidebar-width: 67mm;
+	--print-factor: 1.0856;
+	--a4-width-screen: calc(var(--a4-width) * var(--print-factor));
+	--a4-height-screen: calc(var(--a4-height) * var(--print-factor));
+	--a4-margin-8-screen: calc(var(--a4-margin-8) * var(--print-factor));
+	--sidebar-width-screen: calc(var(--sidebar-width) * var(--print-factor));
+	--breakpoint-a4: calc(
+		var(--a4-width-screen) + 64px
+	); /* --spacing: 4 and 8 is used as a padding-x, hence 2*8*4=64 */
+	--color-primary: #4e5c6b;
+	--color-secondary: #c37d57;
+	--font-google-sans: 'Google Sans', sans-serif;
+	--font-google-serif: 'Radley', serif;
+	--font-eb-serif: 'EB Garamond', serif;
+}
+
+body {
+	font-family: var(--font-google-sans);
+	color: var(--color-primary);
+	font-size: 12pt;
+}
+
+work-experience > role {
+	display: block;
+	font-weight: 600;
+	font-family: var(--font-eb-serif);
+	text-transform: uppercase;
+	font-size: 14pt;
+}

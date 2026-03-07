@@ -1,0 +1,159 @@
+{
+	"profile": {
+		"picture": "/cv-profile-picture-placeholder.png",
+		"name": "Vorname Nachname",
+		"role": "Meine Berufsbezeichnung",
+		"slogan": "Ein Slogan für den ich stehe, 1-2 Zeilen lang.",
+		"pitch": "Das Master-Berufsprofil. Eine prägnante Beschreibung was ich einbringe und wer ich bin, wieso das Unternehmen sich für mich entscheiden sollte."
+	},
+	"qualifications": {
+		"certificates": [
+			{
+				"institute": "Zertifizierungsstelle A",
+				"titles": [
+					"Certified Solutions Associate (CSA)",
+					"Certified Solutions Professional (CSP)"
+				]
+			},
+			{
+				"institute": "Zertifizierungsstelle B",
+				"titles": [
+					"Projekt Management I",
+					"Projekt Management II",
+					"Projekt Management III"
+				]
+			}
+		],
+		"competencies": [
+			{
+				"field": "Kompetenzfeld A",
+				"skills": ["Fähigkeit 1", "Fähigkeit 2", "Fähigkeit 3"]
+			},
+			{
+				"field": "Kompetenzfeld B",
+				"skills": [
+					"Fähigkeit 1",
+					"Fähigkeit 2",
+					"Fähigkeit 3",
+					"Fähigkeit 4",
+					"Fähigkeit 5"
+				]
+			}
+		],
+		"experiences": [
+			{
+				"role": "Rolle im Projekt oder Einsatz",
+				"start": "2021-09",
+				"end": "aktuell",
+				"principal": "Arbeitgeber AG, Zürich",
+				"projects": [
+					{
+						"name": "Projekttitel Alphons",
+						"outcome": "Messbarer Erfolg den ich erzielt habe, z.B. Umsatzsteigerung, oder Kostenreduktion um 10%, Zugewinn von 10'000 Neukunden.",
+						"output": "[optional] Leistung die ich erbradcht habe, z.B. Führung eines 12-köpfigen Teams.",
+						"tasks": [
+							"Project Management",
+							"Controlling",
+							"Stakeholder Management"
+						]
+					},
+					{
+						"name": "Projekttitel Bertram",
+						"outcome": "Einführung eines neuen Produktes mit 50'000 verkauften Einheiten.",
+						"tasks": ["Marketing", "Sales", "Distribution"]
+					}
+				]
+			},
+			{
+				"role": "Chef/in Bäcker/in-Konditor/in-Confiseur/in",
+				"start": "2016-02",
+				"end": "2020-011",
+				"principal": "Backwerke GmbH, Winterthur",
+				"projects": [
+					{
+						"name": "Brot & Backwaren",
+						"outcome": "Umsatzsteigerung um 12%. Neupositionierung als Bio-Bäckerei.",
+						"output": "Führung der Produktion in der Filiale Winterthur.",
+						"tasks": [
+							"Produktionsplanung",
+							"Einkauf",
+							"Rezepturentwicklung",
+							"Schichtplanung"
+						]
+					}
+				]
+			},
+			{
+				"role": "Bäcker/in-Konditor/in-Confiseur/in",
+				"start": "2010-02",
+				"end": "2016-01",
+				"principal": "Backwerke GmbH, Winterthur",
+				"projects": [
+					{
+						"name": "Brot & Backwaren",
+						"output": "Produktion für die Filiale Winterthur.",
+						"tasks": ["Rezeptgetreue Herstellung", "Qualitätskontrolle"]
+					}
+				]
+			}
+		]
+	},
+	"personalDetails": {
+		"personalData": {
+			"fullName": "Vollständiger Name",
+			"address": "Musterstrasse 1, 1234 Musterstadt",
+			"email": "adresse@email.ch",
+			"born": "Geboren am 01.01.1972",
+			"familyStatus": "Verheiratet, 2 Kinder",
+			"phone": "+41 79 456 78 90"
+		},
+		"languages": [
+			{ "name": "Deutsch", "level": "Muttersprache" },
+			{ "name": "Englisch", "level": "Fließend" },
+			{ "name": "Französisch", "level": "Grundkenntnisse" }
+		],
+		"hobbies": ["Reisen", "Fotografie", "Kochen"],
+		"jobEducation": [
+			{
+				"role": "Betriebswirtschaftslehre (B.Sc.)",
+				"start": "2010-10",
+				"end": "2013-03",
+				"principal": "Universität Zürich, CH",
+				"projects": [
+					{
+						"name": "Bachelor Thesis: Kostenreduktion durch Servant-Leadership",
+						"tasks": ["Literaturrecherche", "Interviews"]
+					}
+				]
+			}
+		],
+		"socialServices": [
+			{
+				"role": "Rekrutenschule",
+				"start": "1994-10",
+				"end": "1995-02",
+				"principal": "Schweizer Armee",
+				"projects": [
+					{
+						"name": "ABCAbwKp 120 - Spürpanzer Fuchs",
+						"tasks": ["ABC-Grundausbildung", "Auswertung Spürcomputer"]
+					}
+				]
+			}
+		],
+		"schooling": [
+			{
+				"role": "Allgemeine Matura",
+				"start": "1983-09",
+				"end": "1993-07",
+				"principal": "Kantonsschule Zürich, CH",
+				"projects": [
+					{
+						"name": "Leistungsfächer",
+						"tasks": ["Mathematik", "Deutsch", "Biologie", "Geschichte"]
+					}
+				]
+			}
+		]
+	}
+}

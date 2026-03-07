@@ -1,0 +1,72 @@
+---
+import '../styles/core-competencies.component.css';
+
+import Section from './section.component.astro';
+import SplitRow from '../layouts/split-row.layout.astro';
+import Experience from './experience.component.astro';
+import type { ExperienceData } from './experience.component.astro';
+
+interface Competency {
+	field: string;
+	skills: string[];
+}
+
+interface Props {
+	certificates: {
+		institute: string;
+		titles: string[];
+	}[];
+	competencies: Competency[];
+	experiences: ExperienceData[];
+}
+
+const { competencies, certificates, experiences } = Astro.props;
+---
+
+<SplitRow>
+	<Section title="Zertifikate" slot="left">
+		{
+			certificates.map((entry) => (
+				<certifications>
+					<institution>{entry.institute}</institution>
+					<ul class="text-sm">
+						{entry.titles.map((title) => (
+							<li>{title}</li>
+						))}
+					</ul>
+				</certifications>
+			))
+		}
+	</Section>
+	<Section title="Kernkompetenzen" slot="left">
+		{
+			competencies.map((competency) =>
+				competency.field === 'page-break' ? (
+					<div class="page-break" />
+				) : (
+					<core-competency class="mb-4">
+						<field>{competency.field}</field>
+						<ul class="skills text-sm">
+							{competency.skills.map((skill) => (
+								<li>{skill}</li>
+							))}
+						</ul>
+					</core-competency>
+				)
+			)
+		}
+	</Section>
+	<Section title="Projekterfahrung" slot="right">
+		<figure id="core-competencies-work-experience">
+			<ol>
+				{
+					experiences.map((experience) => (
+						<li class="mb-6 last:mb-0">
+							<Experience {...experience} />
+						</li>
+					))
+				}
+			</ol>
+		</figure>
+	</Section>
+</SplitRow>

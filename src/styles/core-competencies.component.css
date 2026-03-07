@@ -1,0 +1,40 @@
+h2:not(:first-child) {
+	margin-top: var(--a4-margin-8);
+}
+
+ul > li::before {
+	content: '';
+	width: 1em;
+	height: 2px;
+	background-color: var(--color-secondary);
+	display: inline-block;
+	margin-right: 0.5em;
+	top: -3px;
+	position: relative;
+}
+.project li:first-child::before {
+	display: none;
+}
+.project li:not(:first-child)::before {
+	content: '/';
+	margin-left: 0.5em;
+	width: 0.5em;
+	height: 0.2em;
+	top: 2px;
+	background: transparent;
+}
+
+certifications,
+core-competency {
+	display: block;
+	margin-bottom: calc(var(--a4-margin-8) / 2);
+}
+
+certifications > institution,
+core-competency > field {
+	display: block;
+	font-weight: 600;
+	font-family: var(--font-eb-serif);
+	text-transform: uppercase;
+	font-size: 13pt;
+}

@@ -1,0 +1,19 @@
+---
+import SplitRow from '../layouts/split-row.layout.astro';
+import '../styles/profile.component.css';
+import Section from './section.component.astro';
+
+const { picture, name, role, slogan, pitch } = Astro.props;
+---
+
+<header class="flow-root">
+	<img src={picture} class="profile-picture float-left object-bottom" />
+	<fullname>{name}</fullname>
+	<role class="mb-4 text-(--color-secondary)" role="heading" aria-level="2">
+		{role}
+	</role>
+	<slogan class="mt-4 mb-5 block text-[1.14em] leading-[18pt] italic"
+		>"{slogan}"</slogan
+	>
+	<pitch class="text block text-justify text-xs" set:html={pitch} />
+</header>

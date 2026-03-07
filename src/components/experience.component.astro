@@ -1,0 +1,71 @@
+---
+import '../styles/experience.component.css';
+
+export interface ExperienceData {
+	role: string;
+	start: string;
+	end: string;
+	principal: string;
+	projects?: {
+		name: string;
+		outcome?: string;
+		output?: string;
+		tasks?: string[];
+	}[];
+}
+
+interface Props extends ExperienceData {}
+
+const { role, start, end, principal, projects } = Astro.props;
+
+function printDate(dateStr: string, isFuture?: boolean): string {
+	const date = new Date(dateStr);
+	const isInFuture = isFuture && date.getTime() > new Date().getTime();
+	const month = String(date.getMonth() + 1).padStart(2, '0');
+	const year = date.getFullYear();
+	return isNaN(date.getTime())
+		? dateStr
+		: (isInFuture ? 'vsl. ' : '') + month + '.' + year;
+}
+---
+
+<work-experience>
+	<role>{role}</role>
+	<tenure class="inline-block text-sm">
+		{printDate(start, true)}&nbsp;-&nbsp;{printDate(end)}
+	</tenure>
+	&nbsp;|&nbsp;
+	<principal class="inline-block text-sm">{principal}</principal>
+
+	{
+		projects &&
+			projects.map((project) =>
+				project.name === 'page-break' ? (
+					<div class="page-break" />
+				) : (
+					<project class="project my-2 block text-xs">
+						<name class="block font-medium">{project.name}</name>
+						{project.outcome && (
+							<outcome class="block">
+								<span class="font-medium italic">Outcome:&nbsp;</span>
+								{project.outcome}
+							</outcome>
+						)}
+						{project.output && (
+							<output class="block">
+								<span class="font-medium italic">Output:&nbsp;</span>
+								{project.output}
+							</output>
+						)}
+						<tasks>
+							<ul class="text-(--color-secondary) italic">
+								{project.tasks.map((task) => (
+									<li class="inline-block">{task}</li>
+								))}
+							</ul>
+						</tasks>
+					</project>
+				)
+			)
+	}
+</work-experience>

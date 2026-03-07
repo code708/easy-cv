@@ -1,0 +1,14 @@
+---
+const { title, mt } = Astro.props;
+---
+
+{
+	title && (
+		<h2
+			class={`mb-4 text-sm font-medium uppercase italic subpixel-antialiased ${mt ? 'mt-8' : ''}`}
+		>
+			{title}
+		</h2>
+	)
+}
+<slot />

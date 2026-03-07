@@ -1,0 +1,4 @@
+.split-left {
+	width: var(--sidebar-width);
+	margin-right: var(--a4-margin-8);
+}

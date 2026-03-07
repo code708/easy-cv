@@ -1,0 +1,113 @@
+---
+import Section from './section.component.astro';
+import SplitRow from '../layouts/split-row.layout.astro';
+import Experience from './experience.component.astro';
+import type { ExperienceData } from './experience.component.astro';
+
+interface PersonalData {
+	fullName: string;
+	address: string;
+	phone: string;
+	email: string;
+	born: string;
+	familyStatus: string;
+}
+
+interface LanguageSkill {
+	name: string;
+	level: string;
+}
+
+interface Props {
+	personalData: PersonalData;
+	languages: LanguageSkill[];
+	hobbies: string[];
+	jobEducation: ExperienceData[];
+	socialServices: ExperienceData[];
+	schooling: ExperienceData[];
+}
+
+const {
+	personalData,
+	languages,
+	hobbies,
+	jobEducation,
+	socialServices,
+	schooling,
+} = Astro.props;
+---
+
+<SplitRow>
+	<Section title="Personenbezogene Daten" slot="left">
+		<figure id="personal-data" class="mb-4 text-sm">
+			<p id="fullname">{personalData.fullName}</p>
+			<p id="address">{personalData.address}</p>
+			<br />
+			<p id="phone">{personalData.phone}</p>
+			<p id="email">{personalData.email}</p>
+			<br />
+			<p id="born" set:html={personalData.born} />
+			<p id="family-status">{personalData.familyStatus}</p>
+		</figure>
+	</Section>
+	<Section title="Sprachen" slot="left">
+		<figure id="languages" class="mb-4">
+			<ul class="text-sm">
+				{
+					languages.map((language) => (
+						<li>
+							{language.name} ({language.level})
+						</li>
+					))
+				}
+			</ul>
+		</figure>
+	</Section>
+	<Section title="Hobbies" slot="left">
+		<hobbies>
+			<ul class="text-sm">
+				{hobbies.map((hobby) => <li>{hobby}</li>)}
+			</ul>
+		</hobbies>
+	</Section>
+
+	<Section title="Berufsausbildung" slot="right">
+		<figure id="higher-education">
+			<ol>
+				{
+					jobEducation.map((education) => (
+						<li>
+							<Experience {...education} />
+						</li>
+					))
+				}
+			</ol>
+		</figure>
+	</Section>
+	<Section title="Militär- / Zivildienst" slot="right">
+		<figure id="military-and-civil-services">
+			<ol>
+				{
+					socialServices.map((service) => (
+						<li>
+							<Experience {...service} />
+						</li>
+					))
+				}
+			</ol>
+		</figure>
+	</Section>
+	<Section title="Schulbildung" slot="right">
+		<figure id="military-and-civil-services">
+			<ol>
+				{
+					schooling.map((school) => (
+						<li>
+							<Experience {...school} />
+						</li>
+					))
+				}
+			</ol>
+		</figure>
+	</Section>
+</SplitRow>
