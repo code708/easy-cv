@@ -22,6 +22,51 @@ easy-cv/
 └── package.json
 ```
 
+## AI Agents and MCP
+
+### Using Claude's GitHub MCP
+
+Claude Code uses the [Model Context Protocol](https://modelcontextprotocol.io/) to interact with GitHub.
+
+This project currently relies on a [workaround](https://github.com/anthropics/claude-code/issues/3433) to connect to GitHub. An repository-level `.mcp.json` is required by each developer to provide their own credentials, as it's git-ignored for this same reason.
+
+#### Steps
+
+1. **Create a fine-grained GitHub Personal Access Token (PAT)** with the scopes needed for your work. Go to [token management page](https://github.com/settings/personal-access-tokens).
+
+   > _For more information see the [GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)_.
+
+2. **Store the token in a password manager** for secure storage and retrieval.
+   1. **On MacOS** it's recommended to use the Keychain CLI with a unique service name.
+
+      ```sh
+      security add-generic-password -a "$USER" -s "YOUR_PAT_NAME" -w
+      ```
+
+      > **TIP**: passing `-w` without a value will prompt you for secure input of your PAT in the terminal.
+
+3. **Create `.mcp.json`** in the project root.
+
+   ```json
+   {
+   	"mcpServers": {
+   		"github": {
+   			"command": "sh",
+   			"args": ["-c", "GITHUB_PERSONAL_ACCESS_TOKEN=<MCP_LAUNCH_COMMAND>"]
+   		}
+   	}
+   }
+   ```
+
+   > Replace the <MCP_LAUNCH_COMMAND> with the appropriate shell command invoking your password manager.
+   1. **Using MacOS Keychain**  
+      Launch the official `@modelcontextprotocol/server-github` MCP server, injecting the PAT from the Keychain at runtime.
+      ```sh
+      $(security find-generic-password -a \"$USER\" -s \"YOUR_PAT_NAME\" -w) exec npx -y @modelcontextprotocol/server-github
+      ```
+
+4. **(Re-)start Claude Code** in the project directory. It will detect `.mcp.json` and prompt you to approve the MCP server. After approval the GitHub tools (issues, PRs, etc.) will be available.
+
 ## Git Branching Model
 
 ### Branch Types
@@ -50,11 +95,11 @@ easy-cv/
 
 ### Key Invariant
 
-`integration` must always be in a releasable state. Every merge to `integration` must pass CI, be reviewed, and be production-ready. This eliminates the need for hot fixes or stabilisation phases — any bug fix can be released quickly through the normal workflow.
+`integration` must always be in a releasable state. Every merge to `integration` must pass CI, be reviewed, and be production-ready. This eliminates the need for hot fixes or stabilization phases — any bug fix can be released quickly through the normal workflow.
 
 ### Code Flow
 
-Code flows in one direction per path, with no synchronisation between `main` and `integration`:
+Code flows in one direction per path, with no synchronization between `main` and `integration`:
 
 **Standalone issues:**
 
@@ -93,7 +138,7 @@ Code flows in one direction per path, with no synchronisation between `main` and
 - Annotated tags (`git tag -a`) on `main` after each release merge
 - Format: `v<major>.<minor>.<patch>`
 - Tags are immutable — never deleted or moved
-- **Version derivation** — analyse the cherry-picked commits relative to the last version tag on `main`:
+- **Version derivation** — analyze the cherry-picked commits relative to the last version tag on `main`:
   1. If any commit has a breaking change: bump **major**, reset minor and patch to 0
   2. Else if any commit has type `behav`: bump **minor**, reset patch to 0
   3. Otherwise: bump **patch**
