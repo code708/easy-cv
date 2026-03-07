@@ -2,6 +2,9 @@
 .vscode/
 .claude/
 
+# See CONTRIBUTING.md - devs are supposed to provide their own local .mcp.json
+.mcp.json
+
 # build output
 dist/
 # generated types
