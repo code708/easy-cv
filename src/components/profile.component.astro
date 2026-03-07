@@ -4,10 +4,16 @@ import '../styles/profile.component.css';
 import Section from './section.component.astro';
 
 const { picture, name, role, slogan, pitch } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pictureUrl = `${base}${picture.startsWith('/') ? picture : `/${picture}`}`;
 ---
 
 <header class="flow-root">
-	<img src={picture} class="profile-picture float-left object-bottom" />
+	<img
+		src={pictureUrl}
+		alt={name}
+		class="profile-picture float-left object-bottom"
+	/>
 	<fullname>{name}</fullname>
 	<role class="mb-4 text-(--color-secondary)" role="heading" aria-level="2">
 		{role}
