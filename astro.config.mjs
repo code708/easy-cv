@@ -4,7 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://code708.github.io/easy-cv/',
+	site: 'https://www.code708.com',
+	base: process.env.ASTRO_BASE || '/',
 	vite: {
 		plugins: [tailwindcss()],
 	},
