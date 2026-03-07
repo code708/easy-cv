@@ -1,3 +1,7 @@
+.idea/
+.vscode/
+.claude/
+
 # build output
 dist/
 # generated types
@@ -18,7 +22,3 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
-
-.idea/
-.vscode/
-.claude/
