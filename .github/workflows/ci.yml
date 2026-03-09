@@ -21,6 +21,6 @@ jobs:
 
       - run: pnpm build
         env:
-          ASTRO_BASE: ${{ github.event.repository.name }}
+          SITE_BASE: ${{ github.event.repository.name }}
 
       - run: pnpm format:check

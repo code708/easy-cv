@@ -34,7 +34,7 @@ jobs:
         id: pages
       - run: pnpm build
         env:
-          ASTRO_BASE: ${{ steps.pages.outputs.base_path }}
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
 
       - uses: actions/upload-pages-artifact@v3
         with:
