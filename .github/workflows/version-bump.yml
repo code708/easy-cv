@@ -1,0 +1,148 @@
+name: Version Bump
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [integration]
+
+permissions:
+  contents: write
+  statuses: write
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Get base version
+        id: base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Query merge queue for the last entry's head commit SHA
+          QUEUE_SHA=$(gh api graphql -f query='
+            query {
+              repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
+                mergeQueue(branch: "integration") {
+                  entries(last: 1) {
+                    nodes {
+                      headCommit { oid }
+                    }
+                  }
+                }
+              }
+            }
+          ' --jq '.data.repository.mergeQueue.entries.nodes[0].headCommit.oid // empty' 2>/dev/null || true)
+
+          if [ -n "$QUEUE_SHA" ]; then
+            echo "Reading base version from merge queue entry: $QUEUE_SHA"
+            BASE_VERSION=$(git show "${QUEUE_SHA}:package.json" | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version")
+          else
+            echo "Merge queue empty, reading base version from origin/integration"
+            BASE_VERSION=$(git show origin/integration:package.json | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version")
+          fi
+
+          echo "Base version: $BASE_VERSION"
+          echo "version=$BASE_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Compute expected version
+        id: expected
+        run: |
+          set -euo pipefail
+
+          BASE_VERSION="${{ steps.base.outputs.version }}"
+          BASE_MAJOR=$(echo "$BASE_VERSION" | cut -d. -f1)
+          BASE_MINOR=$(echo "$BASE_VERSION" | cut -d. -f2)
+          BASE_PATCH=$(echo "$BASE_VERSION" | cut -d. -f3)
+
+          # Analyze all PR commits
+          MERGE_BASE=$(git merge-base origin/integration HEAD)
+          BUMP_LEVEL=0  # 0=none, 1=patch, 2=minor, 3=major
+
+          while IFS= read -r subject; do
+            [ -z "$subject" ] && continue
+
+            # Parse conventional commit: type(scope)!: description
+            if [[ "$subject" =~ ^([a-z]+)(\([^)]*\))?(!)?\:\  ]]; then
+              TYPE="${BASH_REMATCH[1]}"
+              BREAKING="${BASH_REMATCH[3]}"
+
+              if [ "$BREAKING" = "!" ]; then
+                LEVEL=3
+              elif [ "$TYPE" = "behav" ]; then
+                LEVEL=2
+              elif [ "$TYPE" = "behavfix" ] || [ "$TYPE" = "perf" ] || [ "$TYPE" = "perffix" ]; then
+                LEVEL=1
+              else
+                LEVEL=0
+              fi
+
+              if [ "$LEVEL" -gt "$BUMP_LEVEL" ]; then
+                BUMP_LEVEL=$LEVEL
+              fi
+            fi
+          done < <(git log --format="%s" "${MERGE_BASE}..HEAD")
+
+          # Compute expected version
+          case $BUMP_LEVEL in
+            0) EXPECTED_VERSION="$BASE_VERSION" ;;
+            1) EXPECTED_VERSION="${BASE_MAJOR}.${BASE_MINOR}.$((BASE_PATCH + 1))" ;;
+            2) EXPECTED_VERSION="${BASE_MAJOR}.$((BASE_MINOR + 1)).0" ;;
+            3) EXPECTED_VERSION="$((BASE_MAJOR + 1)).0.0" ;;
+          esac
+
+          echo "Bump level: $BUMP_LEVEL"
+          echo "Expected version: $EXPECTED_VERSION"
+          echo "version=$EXPECTED_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check and update version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          EXPECTED="${{ steps.expected.outputs.version }}"
+          CURRENT=$(node -p "require('./package.json').version")
+          SHA=$(git rev-parse HEAD)
+
+          echo "Current version: $CURRENT"
+          echo "Expected version: $EXPECTED"
+
+          if [ "$CURRENT" = "$EXPECTED" ]; then
+            echo "Version is correct. Setting status."
+            gh api "repos/${{ github.repository }}/statuses/${SHA}" \
+              -f state=success \
+              -f context=version-check \
+              -f description="Version ${EXPECTED} is correct"
+            exit 0
+          fi
+
+          echo "Version mismatch. Updating package.json to ${EXPECTED}."
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '${EXPECTED}';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, '\t') + '\n');
+          "
+
+          git add package.json
+          git commit -m "chore: Bump version to ${EXPECTED}"
+          git push
+
+          NEW_SHA=$(git rev-parse HEAD)
+          gh api "repos/${{ github.repository }}/statuses/${NEW_SHA}" \
+            -f state=success \
+            -f context=version-check \
+            -f description="Version bumped to ${EXPECTED}"
