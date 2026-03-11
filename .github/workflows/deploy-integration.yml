@@ -1,0 +1,67 @@
+name: Deploy Integration
+
+on:
+  push:
+    branches: [integration]
+
+concurrency:
+  group: deploy-integration
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+        env:
+          SITE_BASE: /easy-cv/
+          SITE_DOMAIN: https://integration.code708.com
+
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PAGES_INTEGRATION_DEPLOY_KEY }}
+
+      - name: Deploy to integration environment
+        run: |
+          set -euo pipefail
+
+          REPO_NAME="easy-cv"
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="${REPO_NAME}/${VERSION}"
+          BRANCH="project/${REPO_NAME}"
+          COMMIT_MSG="deploy: ${REPO_NAME} ${VERSION} @ ${{ github.sha }}"
+
+          git clone git@github.com:code708/github-pages-integration.git .integration-environment
+          cd .integration-environment
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code origin "refs/heads/${BRANCH}" >/dev/null 2>&1; then
+            git switch -C "${BRANCH}" "origin/${BRANCH}"
+          else
+            git switch -c "${BRANCH}" origin/main
+          fi
+
+          rm -rf "${REPO_NAME}"
+          cp -r ../dist "${REPO_NAME}"
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "There are no changes to the src code. Skipping deployment."
+            exit 0
+          fi
+
+          git commit -m "${COMMIT_MSG}"
+          git tag -f "${TAG}"
+          git push origin "${BRANCH}" "${TAG}" --force-with-lease
