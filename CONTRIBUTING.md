@@ -230,6 +230,10 @@ All bugs — including those discovered in production on `main` — are regular 
 
 One commit should represent a single logical change. If possible keep changes scoped to a single domain or logical unit. Keep commits as small as possible, but as large as necessary. Write a conventional commit message for every commit.
 
+### Bumping the version
+
+Do not update the version in `package.json` manually. A CI workflow automatically computes and bumps the version on PRs targeting `integration`, based on the commit types in the PR.
+
 ### Writing commit messages
 
 Commit messages follow a variation of the **Conventional Commits** [specification](https://www.conventionalcommits.org/en/v1.0.0/):
